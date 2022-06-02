@@ -17,6 +17,7 @@ const contentTypeMultipartMixed = "multipart/mixed"
 const contentTypeMultipartAlternative = "multipart/alternative"
 const contentTypeMultipartRelated = "multipart/related"
 const contentTypeTextHtml = "text/html"
+const contentTypeTextAmpHtml = "text/x-amp-html"
 const contentTypeTextPlain = "text/plain"
 
 // Parse an email message read from io.Reader into parsemail.Email struct
@@ -143,6 +144,7 @@ func parseMultipartRelated(msg io.Reader, boundary string) (textBody, htmlBody s
 			htmlBody += hb
 			textBody += tb
 			embeddedFiles = append(embeddedFiles, ef...)
+		case contentTypeTextAmpHtml:
 		default:
 			if isEmbeddedFile(part) {
 				ef, err := decodeEmbeddedFile(part)
@@ -200,6 +202,7 @@ func parseMultipartAlternative(msg io.Reader, boundary string) (textBody, htmlBo
 			htmlBody += hb
 			textBody += tb
 			embeddedFiles = append(embeddedFiles, ef...)
+		case contentTypeTextAmpHtml:
 		default:
 			if isEmbeddedFile(part) {
 				ef, err := decodeEmbeddedFile(part)
@@ -483,7 +486,7 @@ type Email struct {
 	ResentMessageID string
 
 	ContentType string
-	Content io.Reader
+	Content     io.Reader
 
 	HTMLBody string
 	TextBody string
